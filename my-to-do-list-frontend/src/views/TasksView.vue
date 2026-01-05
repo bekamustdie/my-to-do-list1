@@ -1,39 +1,53 @@
 <script setup>
 	import { ref, onMounted } from 'vue'
 	import api from '@/services/api'
+	import AddTask from '@/components/AddTask.vue'
+	import GetTasks from '@/components/GetTasks.vue'
 	
 	const tasks = ref([])
-	const newTask = ref({
-	  title: '',
-	  deadline: '',
-	  priority: 'medium'
-	})
-	const loading = ref(false)
 	const error = ref('')
-	
-	const loadTasks = async () => {
-	  try {
-		loading.value = true
-		const response = await api.getTasks()
-		tasks.value = response.data.data || response.data
-	  } catch (err) {
-		error.value = 'Ошибка загрузки задач'
-		console.error(err)
-	  } finally {
-		loading.value = false
-	  }
+
+	const getTasks = async ()=>{
+		try{
+			await api.getTasks()
+		}
+		catch{
+			error.value = 'something went wrong'
+			console.error(error)
+		}
 	}
 	
-	const createTask = async () => {
+	
+
+	const deleteTask = async (id) => {
 	  try {
-		await api.createTask(newTask.value)
-		newTask.value = { title: '', deadline: '', priority: 'medium' }
+		await api.deleteTask(id)
 		await loadTasks()
 	  } catch (err) {
-		error.value = 'Ошибка создания задачи'
 		console.error(err)
 	  }
 	}
+	// const loadTasks = async () => {
+	//   try {
+	// 	loading.value = true
+	// 	const response = await api.getTasks()
+	// 	tasks.value = response.data.data || response.data
+	//   } catch (err) {
+	// 	error.value = 'Something went wrong'
+	// 	console.error(err)
+	//   }
+	// }
+	
+	// const createTask = async () => {
+	//   try {
+	// 	await api.createTask(newTask.value)
+	// 	newTask.value = { title: '', deadline: '', priority: 'medium' }
+	// 	// await loadTasks()
+	//   } catch (err) {
+	// 	error.value = 'Ошибка создания задачи'
+	// 	console.error(err)
+	//   }
+	// }
 	
 	const toggleTask = async (task) => {
 	  try {
@@ -46,103 +60,18 @@
 	  }
 	}
 	
-	const deleteTask = async (id) => {
-	  try {
-		await api.deleteTask(id)
-		await loadTasks()
-	  } catch (err) {
-		console.error(err)
-	  }
-	}
-	
 	onMounted(() => {
-	  loadTasks()
+	  getTasks()
 	})
 	</script>
 	
 	<template>
-	  <div class="container">
-		<h1>📝 Todo List</h1>
-	
-		<div v-if="error" class="error">{{ error }}</div>
-		<div v-if="loading" class="loading">Загрузка...</div>
-	
-		<form @submit.prevent="createTask" class="create-form">
-		  <input
-			v-model="newTask.title"
-			type="text"
-			placeholder="Название задачи"
-			required
-		  />
-		  <input
-			v-model="newTask.deadline"
-			type="date"
-			required
-		  />
-		  <select v-model="newTask.priority">
-			<option value="low">Низкий</option>
-			<option value="medium">Средний</option>
-			<option value="high">Высокий</option>
-		  </select>
-		  <button type="submit">➕ Добавить</button>
-		</form>
-	
-		<ul class="task-list" v-if="tasks.length > 0">
-		  <li
-			v-for="task in tasks"
-			:key="task.id"
-			:class="{ completed: task.completed }"
-		  >
-			<input
-			  type="checkbox"
-			  :checked="task.completed"
-			  @change="toggleTask(task)"
-			/>
-			<div class="task-info">
-			  <strong>{{ task.title }}</strong>
-			  <span>📅 {{ task.deadline }} | 🎯 {{ task.priority }}</span>
-			</div>
-			<button @click="deleteTask(task.id)" class="delete-btn">
-			  🗑️
-			</button>
-		  </li>
-		</ul>
-	
-		<div v-else-if="!loading" class="empty">
-		  Нет задач. Создайте первую! 🎉
-		</div>
-	  </div>
+		<AddTask/>
+		<GetTasks/>
 	</template>
 	
 	<style scoped>
-	.container {
-	  max-width: 700px;
-	  margin: 50px auto;
-	  padding: 30px;
-	  background: #f9f9f9;
-	  border-radius: 12px;
-	  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-	}
 	
-	h1 {
-	  text-align: center;
-	  color: #2c3e50;
-	  margin-bottom: 30px;
-	}
-	
-	.error {
-	  padding: 15px;
-	  background: #fee;
-	  color: #c33;
-	  border-radius: 8px;
-	  margin-bottom: 20px;
-	}
-	
-	.loading {
-	  text-align: center;
-	  padding: 20px;
-	  color: #666;
-	}
 	
 	.create-form {
 	  display: flex;

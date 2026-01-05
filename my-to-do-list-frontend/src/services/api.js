@@ -8,6 +8,7 @@ const api = axios.create({
 })
 
 export default {
+  
   getTasks() {
     return api.get('/tasks')
   },
@@ -23,4 +24,5 @@ export default {
   deleteTask(id) {
     return api.delete(`/tasks/${id}`)
   }
+
 }
