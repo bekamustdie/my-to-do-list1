@@ -9,16 +9,26 @@
 
 	const getTasks = async ()=>{
 		try{
-			await api.getTasks()
+			const response = await api.getTasks()
+			tasks.value  = response.data
+		}
+		catch(err){
+			error.value = 'something went wrong'
+    		console.error('problem->', err)
+			console.log("didnt work ")
+		}
+	}
+
+	const createTask = async ()=>{
+		try{
+			await api.createTask(newTask.value)
+			newTask.value = {title:"", deadline:"", priority:"medium"}
 		}
 		catch{
 			error.value = 'something went wrong'
-			console.error(error)
+			console.error(err)
 		}
 	}
-	
-	
-
 	const deleteTask = async (id) => {
 	  try {
 		await api.deleteTask(id)
@@ -27,27 +37,7 @@
 		console.error(err)
 	  }
 	}
-	// const loadTasks = async () => {
-	//   try {
-	// 	loading.value = true
-	// 	const response = await api.getTasks()
-	// 	tasks.value = response.data.data || response.data
-	//   } catch (err) {
-	// 	error.value = 'Something went wrong'
-	// 	console.error(err)
-	//   }
-	// }
 	
-	// const createTask = async () => {
-	//   try {
-	// 	await api.createTask(newTask.value)
-	// 	newTask.value = { title: '', deadline: '', priority: 'medium' }
-	// 	// await loadTasks()
-	//   } catch (err) {
-	// 	error.value = 'Ошибка создания задачи'
-	// 	console.error(err)
-	//   }
-	// }
 	
 	const toggleTask = async (task) => {
 	  try {
@@ -59,15 +49,14 @@
 		console.error(err)
 	  }
 	}
-	
 	onMounted(() => {
-	  getTasks()
+		getTasks()
 	})
 	</script>
 	
 	<template>
 		<AddTask/>
-		<GetTasks/>
+		<GetTasks v-for="task in tasks" :task/>
 	</template>
 	
 	<style scoped>

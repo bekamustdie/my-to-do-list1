@@ -1,24 +1,13 @@
 <script setup>
 	import { ref, onMounted } from 'vue'
 	import api from '@/services/api'
+	const error = ref("")
 	const newTask = ref({
 	  title: '',
 	  deadline: '',
 	  priority: 'medium'
 	})
-	const createTask = async ()=>{
-		try{
-			await api.createTask(newTask.value)
-			newTask.value = {title:"", deadline:"", priority:"medium"}
-		}
-		catch{
-			error.value = 'something went wrong'
-			console.error(err)
-		}
-		finally{
-			loading.value = false
-		}
-	}
+	
 </script>
 
 <template>
