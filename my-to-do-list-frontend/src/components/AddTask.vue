@@ -7,7 +7,12 @@
 	  deadline: '',
 	  priority: 'medium'
 	})
-	
+	const emit = defineEmits(["create-task"])
+	const create = ()=>{
+		console.log("create triggered")
+		emit("create-task", newTask.value)
+	}
+
 </script>
 
 <template>
@@ -15,7 +20,7 @@
 		<div class="p-[15px] bg-[#fee] color-[#c33] rounded-md mb-[20px] hidden"></div>
 			<h1 class="text-center color-[#2c3e50] mb-[30px]">📝 Todo List</h1>
 			<div class="flex gap-[10px] mb-[30px] ">
-			<form @submit.prevent="createTask" name="newTask" class="flex gap-2 flex-wrap">
+			<form @submit.prevent="create" name="newTask" class="flex gap-2 flex-wrap">
 				<input v-model="newTask.title"  placeholder="your task" name="title" type="text" class="p-[12px] border border-[2px] border-[#ddd] rounded-lg">
 				<input v-model="newTask.deadline"  name="deadline" type="date" class="p-[12px] border border-[2px] border-[#ddd] rounded-lg">
 				<select v-model="newTask.priority"  name="priority"  class="p-[12px] border border-[2px] border-[#ddd] rounded-lg">

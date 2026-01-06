@@ -7,6 +7,7 @@
 	
 	const tasks = ref([])
 	const error = ref('')
+	
 
 	const getTasks = async ()=>{
 		try{
@@ -14,15 +15,13 @@
 			tasks.value  = response.data.data
 		}
 		catch(err){
-			error.value = 'something went wrong'
-    		console.error('problem->', err)
+			
 			console.log("didnt work")
 		}
 	}
-
-	const createTask = async ()=>{
+	const createTask = async (value)=>{
 		try{
-			await api.createTask(newTask.value)
+			await api.createTask(value)
 			newTask.value = {title:"", deadline:"", priority:"medium"}
 		}
 		catch{
@@ -30,6 +29,8 @@
 			console.error(err)
 		}
 	}
+
+	
 	const deleteTask = async (id) => {
 	  try {
 		await api.deleteTask(id)
@@ -57,7 +58,7 @@
 	
 	<template>
 		<div class="max-w-2xl mt-[50px] mb-[20px]  mx-auto p-[30px] rounded-lg ">
-			<AddTask/>
+			<AddTask @create-task="createTask"/>
 			<div class="flex flex-wrap w-[90%] justify-between mx-auto mb-5">
 				<Button  text="Undone"/>
 				<Button  text="All"/>

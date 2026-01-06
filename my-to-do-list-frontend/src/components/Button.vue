@@ -6,7 +6,6 @@
 			default: "Button"
 		},
 		color:{
-			required:true,
 			type: String,
 			default: "#73b2ff"
 		}

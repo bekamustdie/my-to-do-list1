@@ -2,7 +2,7 @@
 	const props = defineProps({
 		task:{
 			required:true,
-			type: Array
+			type: Object
 		}
 	})
 	
