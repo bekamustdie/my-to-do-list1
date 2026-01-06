@@ -2,7 +2,8 @@
 	import { ref, onMounted } from 'vue'
 	import api from '@/services/api'
 	import AddTask from '@/components/AddTask.vue'
-	import GetTasks from '@/components/GetTasks.vue'
+	import Task from '@/components/Task.vue'
+	import Button from '@/components/Button.vue'
 	
 	const tasks = ref([])
 	const error = ref('')
@@ -10,12 +11,12 @@
 	const getTasks = async ()=>{
 		try{
 			const response = await api.getTasks()
-			tasks.value  = response.data
+			tasks.value  = response.data.data
 		}
 		catch(err){
 			error.value = 'something went wrong'
     		console.error('problem->', err)
-			console.log("didnt work ")
+			console.log("didnt work")
 		}
 	}
 
@@ -55,8 +56,19 @@
 	</script>
 	
 	<template>
-		<AddTask/>
-		<GetTasks v-for="task in tasks" :task/>
+		<div class="max-w-2xl mt-[50px] mb-[20px]  mx-auto p-[30px] rounded-lg ">
+			<AddTask/>
+			<div class="flex flex-wrap w-[90%] justify-between mx-auto mb-5">
+				<Button  text="Undone"/>
+				<Button  text="All"/>
+				<Button  text="Done"/>
+			</div>
+			<div class="max-w-2xl my-[10px] bg-[#f9f9f9] mx-auto p-[20px] rounded-lg shadow-md">
+				<div v-for="task in tasks" :key="task.id" class="flex flex-col bg-[#dff5da] w-full mx-auto my-[10px] p-[30px] rounded-lg shadow-md">
+					<Task :task="task"/>
+				</div>
+			</div>
+		</div>
 	</template>
 	
 	<style scoped>

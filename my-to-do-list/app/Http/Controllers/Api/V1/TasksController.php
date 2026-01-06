@@ -11,14 +11,15 @@ use App\Models\Task;
 
 class TasksController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index(Request $request)
     {
         $query = Task::query();
         if ($request->has("completed")){
             $query->where("completed", $request->boolean("completed"));
+        }
+        if ($request->has("priority")){
+            $query->where("priority", $request->priority);
         }
         $tasks = $query->get();
         return TaskResource::collection($tasks);

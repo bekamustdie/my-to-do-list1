@@ -19,7 +19,7 @@ class TaskResource extends JsonResource
             'title'=>$this->title,
             'deadline'=>$this->deadline,
             'priority'=>$this->priority,
-            'completed'=>$this->completed,
+            'completed'=>(bool) $this->completed,
             'created_at'=>$this->created_at->toISOString(),
             'updated_at'=>$this->updated_at->toISOString()
         ];
