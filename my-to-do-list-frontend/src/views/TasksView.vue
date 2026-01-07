@@ -7,22 +7,36 @@
 	
 	const tasks = ref([])
 	const error = ref('')
+	const AppliyedFilter = ref("all")
 	
 
 	const getTasks = async ()=>{
-		try{
-			const response = await api.getTasks()
-			tasks.value  = response.data.data
-		}
-		catch(err){
+		try {
+			let response;
+			switch (AppliyedFilter.value) {
+			case "all":
+				response = await api.getAllTasks();
+				break;
+			case "done":
+				response = await api.getDoneTasks();
+				break;
+			case "undone":
+				response = await api.getUndoneTasks();
+				break;
+			}
 			
-			console.log("didnt work")
+			tasks.value = response.data.data.reverse();
+		} 
+		catch(err) {
+			console.log("didnt work", err);
 		}
 	}
+
 	const createTask = async (value)=>{
 		try{
 			await api.createTask(value)
-			newTask.value = {title:"", deadline:"", priority:"medium"}
+			alert('✅ Task created succefully!')
+			await getTasks()	
 		}
 		catch{
 			error.value = 'something went wrong'
@@ -38,6 +52,11 @@
 	  } catch (err) {
 		console.error(err)
 	  }
+	}
+
+	const ApplyFilter = async (type)=>{
+		AppliyedFilter.value = type
+		await getTasks();
 	}
 	
 	
@@ -60,9 +79,9 @@
 		<div class="max-w-2xl mt-[50px] mb-[20px]  mx-auto p-[30px] rounded-lg ">
 			<AddTask @create-task="createTask"/>
 			<div class="flex flex-wrap w-[90%] justify-between mx-auto mb-5">
-				<Button  text="Undone"/>
-				<Button  text="All"/>
-				<Button  text="Done"/>
+				<Button @apply-filter="ApplyFilter" text="Undone" name="undone"/>
+				<Button @apply-filter="ApplyFilter" text="All" name="all"/>
+				<Button @apply-filter="ApplyFilter" text="Done" name="done"/>
 			</div>
 			<div class="max-w-2xl my-[10px] bg-[#f9f9f9] mx-auto p-[20px] rounded-lg shadow-md">
 				<div v-for="task in tasks" :key="task.id" class="flex flex-col bg-[#dff5da] w-full mx-auto my-[10px] p-[30px] rounded-lg shadow-md">

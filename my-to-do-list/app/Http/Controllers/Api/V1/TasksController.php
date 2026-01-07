@@ -11,7 +11,6 @@ use App\Models\Task;
 
 class TasksController extends Controller
 {
-
     public function index(Request $request)
     {
         $query = Task::query();

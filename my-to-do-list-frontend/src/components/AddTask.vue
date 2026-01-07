@@ -11,6 +11,7 @@
 	const create = ()=>{
 		console.log("create triggered")
 		emit("create-task", newTask.value)
+		newTask.value = {title:"", deadline:"", priority:"medium"}
 	}
 
 </script>

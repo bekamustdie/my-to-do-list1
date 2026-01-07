@@ -9,8 +9,14 @@ const api = axios.create({
 
 export default {
   
-  getTasks() {
+  getAllTasks() {
     return api.get('/tasks')
+  },
+  getDoneTasks() {
+    return api.get('/tasks?completed=true')
+  },
+  getUndoneTasks() {
+    return api.get('/tasks?completed=false')
   },
 
   createTask(data) {
