@@ -18,13 +18,27 @@ import { computed } from 'vue';
 				return "#d40606"
 		}
 	})
+
+	const strikeThrough = computed(()=>{
+		if (props.task.completed){
+			return "line-through"
+		}
+	})
+
+	const emit = defineEmits(['updateTask'])
+
+	const handleChange = ()=>{
+		emit('updateTask', props.task)
+	}
+
+	const isChecked = computed(() => props.task.completed)
 	
 </script>
 <template>
 	
 	<div class="flex">
-		<input type="checkbox" class="w-[20px]">
-		<p class="flex-1 text-center my-auto">{{props.task.title}}</p>
+		<input type="checkbox" @change="handleChange" class="w-[20px]" :checked="isChecked">
+		<p class="flex-1 text-center my-auto" :style="{textDecoration: strikeThrough}">{{props.task.title}}</p>
 		<div class="text-xs flex flex-col gap-4 mx-5">
 			<span  >{{props.task.deadline}}</span>
 			<span :style="{ color: PriorityStyles }" >{{props.task.priority}}</span>
