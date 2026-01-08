@@ -34,24 +34,36 @@
 
 	const createTask = async (value)=>{
 		try{
+			// console.log(value)
 			await api.createTask(value)
 			alert('✅ Task created succefully!')
 			await getTasks()	
 		}
-		catch{
+		catch(err){
 			error.value = 'something went wrong'
 			console.error(err)
 		}
 	}
 
 	
-	const deleteTask = async (id) => {
-	  try {
-		await api.deleteTask(id)
-		await loadTasks()
-	  } catch (err) {
-		console.error(err)
-	  }
+	// const deleteTask = async (task) => {
+	//   try {
+	// 	await api.deleteTask(id)
+	// 	await loadTasks()
+	//   } catch (err) {
+	// 	alert(err)
+	//   }
+	// }
+	const deleteTask = async (task)=>{
+		try {
+			await api.deleteTask(task.id)
+			await getTasks()
+			alert("task is deleted")
+		}
+		catch(err){
+			console.log(err)
+			alert("something went wrong...")
+		}
 	}
 
 	const ApplyFilter = async (type)=>{
@@ -85,7 +97,7 @@
 			</div>
 			<div class="max-w-2xl my-[10px] bg-[#f9f9f9] mx-auto p-[20px] rounded-lg shadow-md">
 				<div v-for="task in tasks" :key="task.id" class="flex flex-col bg-[#dff5da] w-full mx-auto my-[10px] p-[30px] rounded-lg shadow-md">
-					<Task :task="task" @updateTask="toggleTask"/>
+					<Task :task="task" @updateTask="toggleTask" @delete="deleteTask"/>
 				</div>
 			</div>
 		</div>

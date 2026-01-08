@@ -25,13 +25,17 @@ import { computed } from 'vue';
 		}
 	})
 
-	const emit = defineEmits(['updateTask'])
+	const emit = defineEmits(['updateTask',"delete"])
 
 	const handleChange = ()=>{
 		emit('updateTask', props.task)
 	}
 
 	const isChecked = computed(() => props.task.completed)
+
+	const deleteThisTask =()=>{
+		emit("delete", props.task)
+	}
 	
 </script>
 <template>
@@ -43,6 +47,8 @@ import { computed } from 'vue';
 			<span  >{{props.task.deadline}}</span>
 			<span :style="{ color: PriorityStyles }" >{{props.task.priority}}</span>
 		</div>
-		<a href="" class="p-2">🗑️</a>
+		<a href="" class="p-2"></a>
+		<button class="p-2 cursor-pointer" @click="deleteThisTask" >🗑️</button>
+
 	</div>
 </template>
