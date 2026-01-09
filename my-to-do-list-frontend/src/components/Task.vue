@@ -1,10 +1,12 @@
 <script setup>
 import { computed } from 'vue';
+import UpdateTask from './UpdateTask.vue';
 
 	const props = defineProps({
 		task:{
 			required:true,
-			type: Object
+			type: Object,
+			change: false
 		}
 	})
 
@@ -39,12 +41,15 @@ import { computed } from 'vue';
 	
 </script>
 <template>
-	
-	<div class="flex">
+	<div v-if="!props.task.change" class="flex">
+		<UpdateTask :task="props.task"/>
+		
+	</div>
+	<div v-else="!props.task.change" class="flex">
 		<input type="checkbox" @change="handleChange" class="w-[20px]" :checked="isChecked">
 		<p class="flex-1 text-center my-auto" :style="{textDecoration: strikeThrough}">{{props.task.title}}</p>
 		<div class="text-xs flex flex-col gap-4 mx-5">
-			<span  >{{props.task.deadline}}</span>
+			<span>{{props.task.deadline}}</span>
 			<span :style="{ color: PriorityStyles }" >{{props.task.priority}}</span>
 		</div>
 		<a href="" class="p-2"></a>

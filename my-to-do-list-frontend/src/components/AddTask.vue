@@ -1,20 +1,29 @@
 <script setup>
 	import { ref, onMounted, computed } from 'vue'
+
+	const getTodayDate = () => {
+		return new Date().toISOString().split('T')[0]
+	}
+
+	
+
 	const newTask = ref({
 	  title: '',
-	  deadline: "",
+	  deadline: getTodayDate(),
 	  priority: 'medium'
 	})
+
 	const emit = defineEmits(["create-task"])
+
 	const create = ()=>{
 		console.log(newTask.value)
 		emit("create-task", newTask.value)
-		newTask.value = {title:"", deadline:"", priority:"medium"}
+		newTask.value = {title:"", deadline:getTodayDate(), priority:"medium"}
 	}
-	const today = computed(()=>{
-		const date = new Date()
-		return date.toISOString().split('T')[0]
-	});
+
+	const today =  new Date().toISOString().split('T')[0]
+	
+
 </script>
 
 <template>
@@ -24,7 +33,7 @@
 			<div class="flex gap-[10px] mb-[30px] ">
 			<form @submit.prevent="create" name="newTask" class="flex gap-2 flex-wrap">
 				<input v-model="newTask.title"  placeholder="your task" name="title" type="text" class="p-[12px]  border-2 border-[#ddd] rounded-lg">
-				<input name="deadline" type="date" class="p-[12px] border border-[2px] border-[#ddd] rounded-lg" :min="today" v-model="today">
+				<input v-model="newTask.deadline" name="deadline" type="date" class="p-[12px] border border-[2px] border-[#ddd] rounded-lg"  :min="today" >
 				<select v-model="newTask.priority"  name="priority"  class="p-[12px] border border-[2px] border-[#ddd] rounded-lg">
 					<option value="low">Low</option>
 					<option value="medium">Medium</option>
