@@ -70,7 +70,7 @@ import UpdateTask from './UpdateTask.vue';
 		</div>
 		<a href="" class="p-2"></a>
 		<button class="p-2 cursor-pointer" @click="deleteThisTask" >🗑️</button>
-		<button class="p-2 cursor-pointer" @click="updateState" >🔄</button>
+		<button v-if="!props.task.completed" class="p-2 cursor-pointer" @click="updateState" >🔄</button>
 
 	</div>
 </template>
