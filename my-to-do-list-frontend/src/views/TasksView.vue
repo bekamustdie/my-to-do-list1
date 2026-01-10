@@ -45,15 +45,7 @@
 		}
 	}
 
-	
-	// const deleteTask = async (task) => {
-	//   try {
-	// 	await api.deleteTask(id)
-	// 	await loadTasks()
-	//   } catch (err) {
-	// 	alert(err)
-	//   }
-	// }
+
 	const deleteTask = async (task)=>{
 		try {
 			await api.deleteTask(task.id)
@@ -72,6 +64,19 @@
 	}
 	
 	
+	const UpdateTask = async(oldTask, newTask)=>{
+		try{
+			await api.updateTask(oldTask.id,newTask,{
+				completed: false
+			})
+			await getTasks()
+			alert("task updated!✅")
+		}
+		catch(err){
+			alert("something went wrong")
+		}
+	}
+
 	const toggleTask = async (task) => {
 	  try {
 		await api.updateTask(task.id, {
@@ -82,6 +87,8 @@
 		console.error(err)
 	  }
 	}
+
+
 	onMounted(() => {
 		getTasks()
 	})
@@ -97,7 +104,7 @@
 			</div>
 			<div class="max-w-2xl my-[10px] bg-[#f9f9f9] mx-auto p-[20px] rounded-lg shadow-md">
 				<div v-for="task in tasks" :key="task.id" class="flex flex-col bg-[#dff5da] w-full mx-auto my-[10px] p-[30px] rounded-lg shadow-md">
-					<Task :task="task" @updateTask="toggleTask" @delete="deleteTask"/>
+					<Task :task="task" @update-task="UpdateTask" @delete="deleteTask" @toggle-task="toggleTask"/>
 				</div>
 			</div>
 		</div>

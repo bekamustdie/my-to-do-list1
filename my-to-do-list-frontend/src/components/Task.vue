@@ -27,10 +27,10 @@ import UpdateTask from './UpdateTask.vue';
 		}
 	})
 
-	const emit = defineEmits(['updateTask',"delete"])
+	const emit = defineEmits(['updateTask',"delete", "update-task"])
 
-	const handleChange = ()=>{
-		emit('updateTask', props.task)
+	const toggleTask = ()=>{
+		emit('toggle-task', props.task)
 	}
 
 	const isChecked = computed(() => props.task.completed)
@@ -39,14 +39,30 @@ import UpdateTask from './UpdateTask.vue';
 		emit("delete", props.task)
 	}
 	
+	const updateTask=(TaskValue)=>{
+		emit("update-task", props.task, TaskValue)
+	}
+
+	const updateState =()=>{
+		props.task.change = !props.task.change
+	}
+	
+
+
+
+	
+	
 </script>
+
 <template>
-	<div v-if="!props.task.change" class="flex">
-		<UpdateTask :task="props.task"/>
+	<!-- checking if change stament is true, change card to update form -->
+	<div v-if="props.task.change" class="flex">
+		<UpdateTask :task="props.task" @update-task ="updateTask" @cancel-update="updateState"/>
 		
 	</div>
-	<div v-else="!props.task.change" class="flex">
-		<input type="checkbox" @change="handleChange" class="w-[20px]" :checked="isChecked">
+	<!--  if change stament is false, showing simple card -->
+	<div v-else="props.task.change" class="flex">
+		<input type="checkbox" @change="toggleTask" class="w-[20px]" :checked="isChecked">
 		<p class="flex-1 text-center my-auto" :style="{textDecoration: strikeThrough}">{{props.task.title}}</p>
 		<div class="text-xs flex flex-col gap-4 mx-5">
 			<span>{{props.task.deadline}}</span>
@@ -54,6 +70,7 @@ import UpdateTask from './UpdateTask.vue';
 		</div>
 		<a href="" class="p-2"></a>
 		<button class="p-2 cursor-pointer" @click="deleteThisTask" >🗑️</button>
+		<button class="p-2 cursor-pointer" @click="updateState" >🔄</button>
 
 	</div>
 </template>
