@@ -4,8 +4,11 @@
 	import AddTask from '@/components/AddTask.vue'
 	import Task from '@/components/Task.vue'
 	import Button from '@/components/Button.vue'
-	
+	import Pagination from '@/components/Pagination.vue'
+
 	const tasks = ref([])
+	const meta = ref([])
+	const links = ref([])
 	const error = ref('')
 	const AppliyedFilter = ref("all")
 	
@@ -25,7 +28,10 @@
 				break;
 			}
 			
-			tasks.value = response.data.data.reverse();
+			// tasks.value = response.data.data.reverse();
+			tasks.value = response.data;
+			meta.value = response.data.meta
+			links.value = response.data.links
 		} 
 		catch(err) {
 			console.log("didnt work", err);
@@ -87,7 +93,7 @@
 		console.error(err)
 	  }
 	}
-
+	
 
 	onMounted(() => {
 		getTasks()
@@ -103,10 +109,15 @@
 				<Button @apply-filter="ApplyFilter" text="Done" name="done"/>
 			</div>
 			<div class="max-w-2xl my-[10px] bg-[#f9f9f9] mx-auto p-[20px] rounded-lg shadow-md">
-				<div v-for="task in tasks" :key="task.id" class="flex flex-col bg-[#dff5da] w-full mx-auto my-[10px] p-[30px] rounded-lg shadow-md">
+				<div v-for="task in tasks.data" :key="task.id" class="flex flex-col bg-[#dff5da] w-full mx-auto my-[10px] p-[30px] rounded-lg shadow-md">
 					<Task :task="task" @update-task="UpdateTask" @delete="deleteTask" @toggle-task="toggleTask"/>
 				</div>
 			</div>
+			<div v-if="tasks.links">
+				<!-- <p>{{ tasks.links }}</p> -->
+				<Pagination :links ="tasks.links"/>
+			</div>
+			
 		</div>
 	</template>
 	

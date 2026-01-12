@@ -27,7 +27,7 @@ import UpdateTask from './UpdateTask.vue';
 		}
 	})
 
-	const emit = defineEmits(['updateTask',"delete", "update-task"])
+	const emit = defineEmits(['toggle-task',"delete", "update-task"])
 
 	const toggleTask = ()=>{
 		emit('toggle-task', props.task)
@@ -48,17 +48,12 @@ import UpdateTask from './UpdateTask.vue';
 	}
 	
 
-
-
-	
-	
 </script>
 
 <template>
 	<!-- checking if change stament is true, change card to update form -->
 	<div v-if="props.task.change" class="flex">
 		<UpdateTask :task="props.task" @update-task ="updateTask" @cancel-update="updateState"/>
-		
 	</div>
 	<!--  if change stament is false, showing simple card -->
 	<div v-else="props.task.change" class="flex">

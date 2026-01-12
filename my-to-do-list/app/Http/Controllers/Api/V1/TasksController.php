@@ -8,19 +8,22 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
 use App\Models\Task;
+use App\Services\TaskFilterService;
+use App\Services\TaskService;
 
 class TasksController extends Controller
 {
+
+    public function __construct(
+        private TaskService $taskService,
+        private TaskFilterService $taskFilterService)
+    {}
     public function index(Request $request)
     {
         $query = Task::query();
-        if ($request->has("completed")){
-            $query->where("completed", $request->boolean("completed"));
-        }
-        if ($request->has("priority")){
-            $query->where("priority", $request->priority);
-        }
-        $tasks = $query->get();
+        // $query = $this->taskFilterService->applyFilters($query, $request);
+        // $tasks = $query->get();
+        $tasks = $this->taskService->getPaginatedTasks($query, $request);
         return TaskResource::collection($tasks);
     }
 
@@ -29,8 +32,7 @@ class TasksController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        $task = Task::create($request->validated());
-
+        $task = $this->taskService->createTask($request->validated());
         return new TaskResource($task); 
     }
 
@@ -47,7 +49,7 @@ class TasksController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        $task->update($request->validated());
+        $task = $this->taskService->updateTask($task, $request->validated());
         return new TaskResource($task);
     }
 
@@ -56,7 +58,7 @@ class TasksController extends Controller
      */
     public function destroy(Task $task)
     {   
-        $task->delete();
+        $this->taskService->deleteTask($task);
         return response()->noContent();
     }
 }
