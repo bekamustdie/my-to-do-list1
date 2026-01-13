@@ -7,13 +7,20 @@
 	import Pagination from '@/components/Pagination.vue'
 
 	const tasks = ref([])
-	const meta = ref([])
 	const links = ref([])
 	const error = ref('')
 	const AppliyedFilter = ref("all")
+	const meta = ref({
+		current_page: 1,
+		last_page: 1,
+		per_page: 15,
+		total: 0,
+		from: 0,
+		to: 0
+	})
 	
 
-	const getTasks = async ()=>{
+	const getTasks = async (page = 1)=>{
 		try {
 			let response;
 			switch (AppliyedFilter.value) {
@@ -31,7 +38,7 @@
 			// tasks.value = response.data.data.reverse();
 			tasks.value = response.data;
 			meta.value = response.data.meta
-			links.value = response.data.links
+			console.log(meta)
 		} 
 		catch(err) {
 			console.log("didnt work", err);
@@ -93,6 +100,24 @@
 		console.error(err)
 	  }
 	}
+
+	const nextPage = () => {
+		console.log("next page works")
+		console.log(meta.value.current_page)
+		console.log(meta.value.last_page)
+		if (meta.value.current_page < meta.value.last_page) {
+			getTasks(meta.value.current_page + 1)
+		}
+	}
+	const prevPage = () => {
+		if (meta.value.current_page > 1) {
+			getTasks(meta.value.current_page - 1)
+		}
+	}
+
+	const goToPage = (page) => {
+		getTasks(page)
+	}
 	
 
 	onMounted(() => {
@@ -113,9 +138,30 @@
 					<Task :task="task" @update-task="UpdateTask" @delete="deleteTask" @toggle-task="toggleTask"/>
 				</div>
 			</div>
-			<div v-if="tasks.links">
-				<!-- <p>{{ tasks.links }}</p> -->
-				<Pagination :links ="tasks.links"/>
+			<div>
+				<div class="flex items-center justify-between mt-8">
+					<button 
+						@click="prevPage"
+						:disabled="meta.current_page === 1"
+						class="px-6 py-2 bg-blue-600 text-white rounded disabled:bg-gray-300 cursor-pointer"
+					>
+						← Previous
+					</button>
+
+					<span class="text-gray-600">
+						Page {{ meta.current_page }} of {{ meta.last_page }}
+					</span>
+
+					<button 
+						@click="nextPage"
+						:disabled="meta.current_page === meta.last_page"
+						class="px-6 py-2 bg-blue-600 text-white rounded disabled:bg-gray-300 cursor-pointer"
+					>
+						Next →
+					</button>
+				</div>
+				
+				
 			</div>
 			
 		</div>

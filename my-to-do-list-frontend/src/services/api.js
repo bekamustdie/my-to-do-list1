@@ -42,14 +42,26 @@ const api = axios.create({
   }
 })
 export default {
-  getAllTasks(){
-    return api.get("/tasks")
+  getAllTasks(page=1){
+    return api.get("/tasks", {
+      params: { page }
+    })
   },
-  getDoneTasks(){
-    return api.get('/tasks?completed=true')
+  getDoneTasks(page=1){
+    return api.get('/tasks', {
+      params: { 
+        page,
+        completed: true 
+      }
+    })
   },
-  getUndoneTasks(){
-    return api.get('/tasks?completed=false')
+  getUndoneTasks(page=1){
+    return api.get('/tasks', {
+      params: { 
+        page,
+        completed: false 
+      }
+    })
   },
   createTask(data){
     return api.post('/tasks', data)
