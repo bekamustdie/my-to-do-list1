@@ -16,7 +16,6 @@
 	const emit = defineEmits(["create-task"])
 
 	const create = ()=>{
-		console.log(newTask.value)
 		emit("create-task", newTask.value)
 		newTask.value = {title:"", deadline:getTodayDate(), priority:"medium"}
 	}

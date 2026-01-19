@@ -25,20 +25,19 @@
 			let response;
 			switch (AppliyedFilter.value) {
 			case "all":
-				response = await api.getAllTasks();
+				response = await api.getAllTasks(page);
 				break;
 			case "done":
-				response = await api.getDoneTasks();
+				response = await api.getDoneTasks(page);
 				break;
 			case "undone":
-				response = await api.getUndoneTasks();
+				response = await api.getUndoneTasks(page);
 				break;
 			}
 			
 			// tasks.value = response.data.data.reverse();
 			tasks.value = response.data;
 			meta.value = response.data.meta
-			console.log(meta)
 		} 
 		catch(err) {
 			console.log("didnt work", err);
@@ -52,9 +51,11 @@
 			alert('✅ Task created succefully!')
 			await getTasks()	
 		}
-		catch(err){
-			error.value = 'something went wrong'
-			console.error(err)
+		catch(error){
+			if (error.response && error.response.status === 409){
+				alert("this task already exists")
+			}
+			
 		}
 	}
 
@@ -102,9 +103,6 @@
 	}
 
 	const nextPage = () => {
-		console.log("next page works")
-		console.log(meta.value.current_page)
-		console.log(meta.value.last_page)
 		if (meta.value.current_page < meta.value.last_page) {
 			getTasks(meta.value.current_page + 1)
 		}

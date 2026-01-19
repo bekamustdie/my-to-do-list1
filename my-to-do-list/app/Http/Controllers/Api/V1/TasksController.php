@@ -32,7 +32,9 @@ class TasksController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
+
         $task = $this->taskService->createTask($request->validated());
+        
         return new TaskResource($task); 
     }
 
